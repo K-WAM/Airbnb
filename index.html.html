@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Airbnb Income & Costs Calculator</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f7fb;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .calculator-container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      max-width: 960px;
+      width: 100%;
+      padding: 1.5rem 2rem 2rem;
+    }
+
+    .calculator-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .calculator-header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .calculator-header p {
+      margin: 0.25rem 0 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.6rem;
+      border-radius: 999px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      margin-left: 0.3rem;
+    }
+
+    h2 {
+      font-size: 1rem;
+      margin: 1.2rem 0 0.4rem;
+      color: #333;
+    }
+
+    .tables-wrapper {
+      display: grid;
+      grid-template-columns: 2fr 1.2fr;
+      gap: 1.5rem;
+      align-items: flex-start;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: #fbfcff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    thead th {
+      text-align: left;
+      padding: 0.6rem 0.7rem;
+      background: #f0f3ff;
+      border-bottom: 1px solid #d8def5;
+      font-weight: 600;
+    }
+
+    tbody td {
+      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid #edf0f7;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .label-cell {
+      width: 40%;
+      font-weight: 500;
+    }
+
+    .description-cell {
+      width: 40%;
+      color: #777;
+      font-size: 0.85rem;
+    }
+
+    .input-cell {
+      width: 20%;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .result-label-cell {
+      width: 65%;
+      font-weight: 500;
+    }
+
+    .result-value-cell {
+      width: 35%;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.35rem 0.45rem;
+      border-radius: 8px;
+      border: 1px solid #ccd2e8;
+      font-size: 0.9rem;
+      text-align: right;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+      background: #ffffff;
+    }
+
+    input[type="number"]:focus {
+      border-color: #5b6ef5;
+      box-shadow: 0 0 0 2px rgba(91, 110, 245, 0.2);
+      background: #ffffff;
+    }
+
+    .section-row td {
+      padding-top: 0.9rem;
+      padding-bottom: 0.5rem;
+      background: #f7f8ff;
+      border-bottom: 1px solid #e1e4f5;
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9rem;
+    }
+
+    .section-row span {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background: #e2e6ff;
+    }
+
+    .highlight-row {
+      background: #f5fbff;
+    }
+
+    .highlight-row strong {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 1rem;
+      }
+      .calculator-container {
+        padding: 1.2rem;
+      }
+      .tables-wrapper {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator-container">
+    <div class="calculator-header">
+      <div>
+        <h1>Airbnb Income & Cost Calculator</h1>
+        <p>Enter your numbers on the left – live results appear on the right.<span class="tag">Live</span></p>
+      </div>
+    </div>
+
+    <div class="tables-wrapper">
+      <!-- INPUTS TABLE -->
+      <div>
+        <h2>Inputs</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Description</th>
+              <th style="text-align:right;">Input</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Stay details -->
+            <tr class="section-row">
+              <td colspan="3"><span>Stay details</span></td>
+            </tr>
+            <tr>
+              <td class="label-cell">Nightly rate</td>
+              <td class="description-cell">Base price per night (before fees & tax).</td>
+              <td class="input-cell">
+                <input type="number" id="nightlyRate" value="150" min="0" step="1" />
+              </td>
+            </tr>
+            <tr>
+              <td class="label-cell">Number of nights</td>
+              <td class="description-cell">Total booked nights for this stay.</td>
+              <td class="input-cell">
+                <input type="number" id="nights" value="3" min="0" step="1" />
+              </td>
+            </tr>
+            <tr>
+              <td class="label-cell">Cleaning fee (per stay)</td>
+              <td class="description-cell">One-time cleaning fee you charge the guest.</td>
+              <td class="input-cell">
+                <input type="number" id="cleaningFee" value="60" min="0" step="1" />
+              </td>
+            </tr>
+
+            <!-- Fees & costs -->
+            <tr class="section-row">
+              <td colspan="3"><span>Fees & costs</span></td>
+            </tr>
+            <tr>
+              <td class="label-cell">Airbnb service fee (%)</td>
+              <td class="description-cell">Approximate percentage Airbnb keeps.</td>
+              <td class="input-cell">
+                <input type="number" id="airbnbFeePercent" value="3" min="0" step="0.1" />
+              </td>
+            </tr>
+            <tr>
+              <td class="label-cell">Estimated damage / extras</td>
+              <td class="description-cell">Damages, supplies, extra services for this stay.</td>
+              <td class="input-cell">
+                <input type="number" id="extraCosts" value="0" min="0" step="1" />
+              </td>
+            </tr>
+            <tr>
+              <td class="label-cell">Tax rate (%)</td>
+              <td class="description-cell">Your effective tax rate on profit.</td>
+              <td class="input-cell">
+                <input type="number" id="taxRatePercent" value="20" min="0" step="0.1" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RESULTS TABLE -->
+      <div>
+        <h2>Results</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Result</th>
+              <th style="text-align:right;">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="result-label-cell">Gross booking amount<br>
+                <span style="font-size:0.8rem; color:#777;">(Nightly rate × Nights) + Cleaning fee</span>
+              </td>
+              <td class="result-value-cell" id="grossAmountDisplay">$0.00</td>
+            </tr>
+            <tr>
+              <td class="result-label-cell">Airbnb service fee (approx)</td>
+              <td class="result-value-cell" id="airbnbFeeAmountDisplay">$0.00</td>
+            </tr>
+            <tr>
+              <td class="result-label-cell">Net payout before extra costs</td>
+              <td class="result-value-cell" id="netBeforeCostsDisplay">$0.00</td>
+            </tr>
+            <tr>
+              <td class="result-label-cell">Net profit before tax</td>
+              <td class="result-value-cell" id="netBeforeTaxDisplay">$0.00</td>
+            </tr>
+            <tr>
+              <td class="result-label-cell">Estimated tax amount</td>
+              <td class="result-value-cell" id="taxAmountDisplay">$0.00</td>
+            </tr>
+            <tr class="highlight-row">
+              <td class="result-label-cell"><strong>Estimated net income after tax</strong></td>
+              <td class="result-value-cell" id="finalNetDisplay"><strong>$0.00</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getNumber(id) {
+      const value = document.getElementById(id).value;
+      const num = parseFloat(value);
+      return isNaN(num) ? 0 : num;
+    }
+
+    function formatCurrency(amount) {
+      return "$" + amount.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function recalculate() {
+      const nightlyRate = getNumber("nightlyRate");
+      const nights = getNumber("nights");
+      const cleaningFee = getNumber("cleaningFee");
+      const airbnbFeePercent = getNumber("airbnbFeePercent");
+      const extraCosts = getNumber("extraCosts");
+      const taxRatePercent = getNumber("taxRatePercent");
+
+      const grossAmount = nightlyRate * nights + cleaningFee;
+      const airbnbFeeAmount = grossAmount * (airbnbFeePercent / 100);
+      const netBeforeCosts = grossAmount - airbnbFeeAmount;
+      const netBeforeTax = netBeforeCosts - extraCosts;
+      const taxAmount = netBeforeTax > 0 ? netBeforeTax * (taxRatePercent / 100) : 0;
+      const finalNet = netBeforeTax - taxAmount;
+
+      document.getElementById("grossAmountDisplay").textContent = formatCurrency(grossAmount);
+      document.getElementById("airbnbFeeAmountDisplay").textContent = formatCurrency(airbnbFeeAmount);
+      document.getElementById("netBeforeCostsDisplay").textContent = formatCurrency(netBeforeCosts);
+      document.getElementById("netBeforeTaxDisplay").textContent = formatCurrency(netBeforeTax);
+      document.getElementById("taxAmountDisplay").textContent = formatCurrency(taxAmount);
+      document.getElementById("finalNetDisplay").innerHTML = "<strong>" + formatCurrency(finalNet) + "</strong>";
+    }
+
+    ["nightlyRate", "nights", "cleaningFee", "airbnbFeePercent", "extraCosts", "taxRatePercent"].forEach(id => {
+      document.getElementById(id).addEventListener("input", recalculate);
+    });
+
+    recalculate();
+  </script>
+</body>
+</html>
